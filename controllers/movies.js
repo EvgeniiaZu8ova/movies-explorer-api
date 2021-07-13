@@ -9,10 +9,11 @@ const { messages } = require('../utils/utils');
 const { movieSearch, movieDelete, movieCreate } = messages;
 
 async function getMovies(req, res, next) {
+  const currentUserId = req.user._id;
   let movies;
 
   try {
-    movies = await Movie.find({});
+    movies = await Movie.find({ owner: currentUserId });
     res.send(movies);
   } catch (e) {
     next(e);
@@ -71,17 +72,13 @@ async function deleteMovie(req, res, next) {
       throw new RightsError(movieDelete);
     }
 
-    try {
-      movieData = await Movie.deleteOne({ _id: id });
+    movieData = await Movie.deleteOne({ _id: id });
 
-      if (!movieData) {
-        return Promise.reject(new Error('Не удалось удалить фильм'));
-      }
-
-      return res.send({ data: movieData });
-    } catch (e) {
-      next(e);
+    if (!movieData) {
+      throw new Error('Не удалось удалить фильм');
     }
+
+    res.send({ data: movieData });
   } catch (e) {
     if (e.name === 'CastError') {
       const error = new SearchError(movieSearch);

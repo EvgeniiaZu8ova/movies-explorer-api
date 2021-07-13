@@ -1,27 +1,6 @@
 const { Joi } = require('celebrate');
 
-const portVar = 3000;
-
-const mongoConfig = {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-};
-
-const cookieConfig = {
-  maxAge: 3600000,
-  httpOnly: true,
-  sameSite: true,
-};
-
-const corsConfig = {
-  origin: true,
-  exposedHeaders: '*',
-  credentials: true,
-};
-
-const linkRegex = /https?:\/\/(www\.)?([\w\-]{1,}\.)([\w\.~:\/\?#\[\]@!\$&'\(\)\*\+,;=\-]{2,})#?/;
+const linkRegex = /https?:\/\/(www\.)?([\w-]{1,}\.)([\w.~:/?#[\]@!$&'()*+,;=-]{2,})#?/;
 
 const messages = {
   userCreate: 'Переданы некорректные данные при создании пользователя.',
@@ -47,8 +26,9 @@ const createMovieJoiObj = Joi.object().keys({
   description: Joi.string().required().min(1),
   image: Joi.string().required().pattern(linkRegex),
   trailer: Joi.string().required().pattern(linkRegex),
-  nameRU: Joi.string().required().min(2).max(30),
-  nameEN: Joi.string().required().min(2).max(30),
+  movieId: Joi.number().required(),
+  nameRU: Joi.string().required().min(2),
+  nameEN: Joi.string().required().min(2),
   thumbnail: Joi.string().required().pattern(linkRegex),
 });
 
@@ -68,10 +48,6 @@ const signinJoiObj = Joi.object().keys({
 });
 
 module.exports = {
-  portVar,
-  mongoConfig,
-  cookieConfig,
-  corsConfig,
   linkRegex,
   messages,
   updateUserJoiObj,

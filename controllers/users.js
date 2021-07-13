@@ -3,14 +3,16 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const { NODE_ENV, JWT_SECRET = 'secret-key' } = process.env;
+const {
+  SECRET_KEY_DEV, NODE_ENV, JWT_SECRET, cookieConfig,
+} = require('../utils/config');
+
+const { messages } = require('../utils/utils');
 
 const SearchError = require('../errors/search-err');
 const DataError = require('../errors/data-err');
 const RegisterError = require('../errors/register-err');
 const AuthError = require('../errors/auth-err');
-
-const { cookieConfig, messages } = require('../utils/utils');
 
 const {
   userCreate, userReg, userAuth, userSearch, userUpdate,
@@ -27,7 +29,7 @@ async function getUserInfo(req, res, next) {
       throw new SearchError(userSearch);
     }
 
-    res.send(user);
+    res.send({ email: user.email, name: user.name });
   } catch (e) {
     next(e);
   }
@@ -51,10 +53,13 @@ async function updateUser(req, res, next) {
       throw new SearchError(userSearch);
     }
 
-    res.send(user);
+    res.send({ email: user.email, name: user.name });
   } catch (e) {
     if (e.name === 'ValidationError') {
       const error = new DataError(userUpdate);
+      next(error);
+    } else if (e.name === 'MongoError') {
+      const error = new RegisterError(userReg);
       next(error);
     }
     next(e);
@@ -105,9 +110,9 @@ async function login(req, res, next) {
   try {
     user = await User.findUserByCredentials(email, password);
 
-    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
+    const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : SECRET_KEY_DEV, { expiresIn: '7d' });
 
-    return res.cookie('token', token, cookieConfig).send({ message: `Добро пожаловать, ${user.name}!` });
+    res.cookie('token', token, cookieConfig).send({ message: `Добро пожаловать, ${user.name}!` });
   } catch (e) {
     const error = new AuthError(userAuth);
     next(error);

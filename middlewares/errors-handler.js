@@ -10,6 +10,4 @@ const handleFinalErrors = (err, res) => {
     });
 };
 
-module.exports = {
-  handleFinalErrors,
-};
+module.exports = handleFinalErrors;

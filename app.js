@@ -1,33 +1,28 @@
-require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { celebrate, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const cors = require('cors');
 
 const {
-  portVar, mongoConfig, corsConfig, signupJoiObj, signinJoiObj,
-} = require('./utils/utils');
+  PORT, MONGO_URL, mongoConfig, corsConfig,
+} = require('./utils/config');
 
-const { handleFinalErrors } = require('./utils/errors-handler');
+const handleFinalErrors = require('./middlewares/errors-handler');
 
-const { PORT = portVar } = process.env;
-
-const { createUser, login, logout } = require('./controllers/users');
-
-const userRouter = require('./routes/users');
-const movieRouter = require('./routes/movies');
-
-const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const SearchError = require('./errors/search-err');
+const limiter = require('./middlewares/rate-limiter');
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', mongoConfig);
+const routes = require('./routes');
+
+mongoose.connect(MONGO_URL, mongoConfig);
 
 const app = express();
+
+app.use(helmet());
 
 app.use(cors(corsConfig));
 
@@ -37,6 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+app.use(limiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -44,23 +40,13 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signup', celebrate({ body: signupJoiObj }), createUser);
-app.post('/signin', celebrate({ body: signinJoiObj }), login);
-app.post('/signout', auth, logout);
-
-app.use('/users', auth, userRouter);
-app.use('/movies', auth, movieRouter);
-
-app.use('*', auth, () => {
-  throw new SearchError('Страницы по запрашиваемому адресу не существует');
-});
+app.use(routes);
 
 app.use(errorLogger);
-
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  handleFinalErrors(err, res);
+  handleFinalErrors(err, res, next);
 });
 
 app.listen(PORT, () => {
