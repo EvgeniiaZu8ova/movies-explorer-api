@@ -3,7 +3,7 @@ require('dotenv').config();
 const SECRET_KEY_DEV = 'secret-key';
 
 const {
-  PORT = 3000, NODE_ENV, JWT_SECRET = SECRET_KEY_DEV,
+  PORT = 4000, NODE_ENV = 'development', JWT_SECRET = SECRET_KEY_DEV,
   MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb',
 } = process.env;
 
