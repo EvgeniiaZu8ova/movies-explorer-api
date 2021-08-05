@@ -20,14 +20,9 @@ const cookieConfig = {
   sameSite: true,
 };
 
-const corsConfig = {
-  origin: true,
-  exposedHeaders: '*',
-  credentials: true,
-};
-
 const corsConfig = {  
-  origin: [    
+  origin: [
+    'http://localhost:8080',    
     'https://evzu8ova.movies.nomoredomains.club'    
   ],  
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
