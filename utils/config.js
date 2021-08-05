@@ -26,6 +26,17 @@ const corsConfig = {
   credentials: true,
 };
 
+const corsConfig = {  
+  origin: [    
+    'https://evzu8ova.movies.nomoredomains.club'    
+  ],  
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
+  preflightContinue: false,  
+  optionsSuccessStatus: 204,  
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
+  credentials: true,
+};
+
 module.exports = {
   SECRET_KEY_DEV,
   PORT,

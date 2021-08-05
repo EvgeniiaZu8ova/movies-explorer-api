@@ -22,9 +22,9 @@ mongoose.connect(MONGO_URL, mongoConfig);
 
 const app = express();
 
-app.use(helmet());
+app.use('*', cors(corsConfig));
 
-app.use(cors(corsConfig));
+app.use(helmet());
 
 app.use(cookieParser());
 
