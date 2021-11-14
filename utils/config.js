@@ -26,6 +26,7 @@ const corsConfig = {
   origin: [
     'http://localhost:3000',
     'https://evzu8ova.movies.nomoredomains.club',
+    'https://movies-explorer-frontend-rdzsqotxq-evgeniiazu8ova.vercel.app',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
