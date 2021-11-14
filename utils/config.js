@@ -19,7 +19,7 @@ const mongoConfig = {
 const cookieConfig = {
   maxAge: 3600000,
   httpOnly: true,
-  sameSite: true,
+  // sameSite: true,
 };
 
 const corsConfig = {
