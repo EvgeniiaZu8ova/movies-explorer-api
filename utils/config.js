@@ -26,7 +26,7 @@ const corsConfig = {
   origin: [
     'http://localhost:3000',
     'https://evzu8ova.movies.nomoredomains.club',
-    'https://shielded-gorge-33035.herokuapp.com',
+    'https://movies-explorer-frontend-alpha.vercel.app',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
