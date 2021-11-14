@@ -3,7 +3,9 @@ require('dotenv').config();
 const SECRET_KEY_DEV = 'secret-key';
 
 const {
-  PORT = 4000, NODE_ENV = 'development', JWT_SECRET = SECRET_KEY_DEV,
+  PORT = 4000,
+  NODE_ENV = 'development',
+  JWT_SECRET = SECRET_KEY_DEV,
   MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb',
 } = process.env;
 
@@ -20,15 +22,15 @@ const cookieConfig = {
   sameSite: true,
 };
 
-const corsConfig = {  
+const corsConfig = {
   origin: [
-    'http://localhost:8080',    
-    'https://evzu8ova.movies.nomoredomains.club'    
-  ],  
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],  
-  preflightContinue: false,  
-  optionsSuccessStatus: 204,  
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],  
+    'http://localhost:3000',
+    'https://evzu8ova.movies.nomoredomains.club',
+  ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 };
 
